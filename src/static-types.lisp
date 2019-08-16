@@ -3,9 +3,6 @@
 
 (in-package :static-types)
 
-(compiler-defun fixnump (fixnum)
-  (typep fixnum 'fixnum))
-
 (typed:defun test-function ((:the fixnum x))
   (let ((+ (typed:force-type (typed:function (fixnum fixnum) fixnum) #'+)))
     (funcall + x x)))
