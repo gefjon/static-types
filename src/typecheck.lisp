@@ -121,4 +121,4 @@
   (multiple-value-bind (local-env argument-types)
       (prepend-function-type-env arglist env)
     (let ((return-type (typecheck-implicit-progn body local-env)))
-      `(function ,argument-types ,return-type))))
+      `(typed:function ,argument-types ,return-type))))

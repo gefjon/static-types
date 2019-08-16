@@ -7,7 +7,7 @@
   (typep fixnum 'fixnum))
 
 (typed:defun test-function ((:the fixnum x))
-  (let ((+ (typed:force-type (function (fixnum fixnum) fixnum) #'+)))
+  (let ((+ (typed:force-type (typed:function (fixnum fixnum) fixnum) #'+)))
     (funcall + x x)))
 
 (typed:defun test-call-test-function ((:the fixnum x))
@@ -16,5 +16,5 @@
 
 (assert (eq (typecheck '(let ((x 3)) x))
             'typed:int))
-(assert (equal (typecheck '(tylambda ((the fixnum x)) x))
-            '(typed:function (fixnum) fixnum)))
+(assert (equal (typecheck '(typed:lambda ((:the typed:int x)) x))
+            '(typed:function (typed:int) typed:int)))
