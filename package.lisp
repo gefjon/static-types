@@ -7,4 +7,8 @@
            :function
            :defun
            :lambda
-           :force-type))
+           :force-type)
+  (:import-from :cl
+                :let
+                :funcall
+                :progn))

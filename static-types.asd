@@ -14,22 +14,25 @@
                          (:file :macro-utils
                                 :depends-on (:compiler-state))
                          (:file :type-env
-                                :depends-on (:compiler-state :macro-utils))
+                                :depends-on (:macro-utils))
                          (:file :unify
-                                :depends-on (:compiler-state :type-env))
-                         (:file :builtin-types)
-                         (:file :arglist
-                                :depends-on (:compiler-state :type-env))
-                         (:file :typecheck
-                                :depends-on (:compiler-state
-                                              :type-env
-                                              :macro-utils
-                                              :unify
-                                              :arglist
-                                              :builtin-types))
-                         (:file :typed
-                                :depends-on (:arglist :typecheck))
+                                :depends-on (:type-env))
+                         (:file :builtin-types
+                                :depends-on (:type-env :macro-utils))
+                         ;; (:file :arglist
+                         ;;        :depends-on (:compiler-state :type-env))
+                         ;; (:file :typecheck
+                         ;;        :depends-on (:compiler-state
+                         ;;                      :type-env
+                         ;;                      :macro-utils
+                         ;;                      :unify
+                         ;;                      :arglist
+                         ;;                      :builtin-types))
+                         ;; (:file :typed
+                         ;;        :depends-on (:arglist :typecheck))
                          ;; (:file :static-types
                          ;;        :depends-on (:compiler-state
                          ;;                      :type-env))
+                         ;; (:file :load-typed
+                         ;;        :depends-on (:compiler-state :typed))
                          ))))

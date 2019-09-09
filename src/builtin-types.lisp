@@ -1,11 +1,16 @@
 (in-package :static-types)
 
-(deftype typed:bool ()
-  '(member :t :f))
+(defmacro def-builtin-type (name &key repr)
+  (let ((repr (or repr name))
+        (variable-name (symbol-concatenate '*
+                                      name
+                                      '*))
+        (packaged-name (intern (symbol-name name)
+                               (find-package :typed))))
+    `(progn
+       (deftype ,packaged-name ()
+         ',repr)
+       (defvar ,variable-name (make-primitive-type :name ',packaged-name)))))
 
-(deftype typed:int ()
-  'fixnum)
-
-(deftype typed:function (arglist return-type)
-  (declare (ignore arglist return-type))
-  'function)
+(def-builtin-type fixnum)
+(def-builtin-type bool :repr (member t nil))

@@ -4,6 +4,13 @@
   "PLACE-AND-TYPE must be a symbol which names both a place and a type"
   `(check-type ,place-and-type ,place-and-type))
 
+(defmacro check-anaphoric-types (&rest places-and-types)
+  "PLACES-AND-TYPES must each be a symbol which names both a place and a type"
+  `(progn
+     ,@(mapcar #'(lambda (place-or-type)
+                   `(check-anaphoric-type ,place-or-type))
+               places-and-types)))
+
 (compiler-defun coerce-to-string (object)
   (typecase object
     (symbol (symbol-name object))
@@ -14,4 +21,3 @@
   (intern (apply #'concatenate
                  (cons 'string (mapcar #'coerce-to-string
                                        symbols-or-strings)))))
-
