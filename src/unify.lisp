@@ -50,10 +50,10 @@
     ((same-primitive-type-p lhs rhs) type-map)
     ;; if lhs is an unbound type variable, we can unify by binding
     ;; it to rhs
-    ((unbound-type-variable-p lhs type-map)
+    ((can-substitute-for-type-variable-p lhs rhs type-map)
      (type-map-extend type-map lhs rhs))
     ;; we can do the same if rhs is an unbound type variable
-    ((unbound-type-variable-p rhs type-map)
+    ((can-substitute-for-type-variable-p rhs lhs type-map)
      (type-map-extend type-map rhs lhs))
 
     ((error "failed to unify ~a with ~a in ~a" lhs rhs type-map))))

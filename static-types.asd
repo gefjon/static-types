@@ -12,13 +12,17 @@
             :depends-on (:package)
             :components ((:file :compiler-state)
                          (:file :macro-utils
-                                :depends-on (:compiler-state))
-                         (:file :type-env
+                          :depends-on (:compiler-state))
+                         (:file :type-struct
                                 :depends-on (:macro-utils))
+                         (:file :substitute
+                                :depends-on (:type-struct))
+                         (:file :type-map
+                                :depends-on (:type-struct))
                          (:file :unify
-                                :depends-on (:type-env))
+                          :depends-on (:type-struct :type-map :substitute))
                          (:file :builtin-types
-                                :depends-on (:type-env :macro-utils))
+                          :depends-on (:type-struct :macro-utils))
                          ;; (:file :arglist
                          ;;        :depends-on (:compiler-state :type-env))
                          ;; (:file :typecheck

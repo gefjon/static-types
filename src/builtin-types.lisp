@@ -10,7 +10,7 @@
     `(progn
        (deftype ,packaged-name ()
          ',repr)
-       (defvar ,variable-name (make-primitive-type :name ',packaged-name)))))
+       (defvar ,variable-name (make-primitive-type ',packaged-name)))))
 
 (def-builtin-type fixnum)
 (def-builtin-type bool :repr (member t nil))
