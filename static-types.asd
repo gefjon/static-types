@@ -19,10 +19,12 @@
                                 :depends-on (:type-struct))
                          (:file :type-map
                                 :depends-on (:type-struct))
+                         (:file :generalize
+                                :depends-on (:type-struct :type-map))
                          (:file :unify
                           :depends-on (:type-struct :type-map :substitute))
                          (:file :builtin-types
-                          :depends-on (:type-struct :macro-utils))
+                                :depends-on (:type-struct :macro-utils))
                          ;; (:file :arglist
                          ;;        :depends-on (:compiler-state :type-env))
                          ;; (:file :typecheck

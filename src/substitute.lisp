@@ -9,8 +9,8 @@
         ('otherwise this)))
 
 (defmethod type-scheme-substitute ((this forall-type) search-for replace-with)
-  (with-slots (variable body) this
-    (if (eq variable search-for)
+  (with-slots (arguments body) this
+    (if (member search-for arguments)
         ;; if THIS closes over the variable SEARCH-FOR, we shouldn't
         ;; actually substitute, to respect the inner scope
         this
@@ -23,7 +23,7 @@
               ;; avoid an allocation
               this
               ;; otherwise, it's a new type
-              (make-forall-type variable substituted-body))))))
+              (make-forall-type arguments substituted-body))))))
 
 (defmethod type-scheme-substitute ((this arrow-type) search-for replace-with)
   (with-slots (input output) this
@@ -54,10 +54,30 @@
 (do-not-substitute type-variable)
 (do-not-substitute primitive-type)
 
+(declaim (ftype (function (type-scheme type-map) type-scheme)
+                substitute-type-map))
+(defun substitute-type-map (within-this-type-scheme type-map)
+  "perform each of the substitutions in TYPE-MAP in sequence on WITHIN-THIS-TYPE-SCHEME"
+  (iter (with type-scheme = within-this-type-scheme)
+        (for (search-for . replace-with) in type-map)
+        (setf type-scheme (type-scheme-substitute type-scheme
+                                                  search-for
+                                                  replace-with))
+        (finally (return type-scheme))))
+
+(declaim (ftype (function (type-scheme (trivial-types:proper-list type-variable))
+                          type-scheme)
+                substitute-fresh-variables))
+(defun substitute-fresh-variables (type-scheme vars-to-replace)
+  "substitute all of the TYPE-VARIABLEs in VARS-TO-REPLACE with fresh unbound TYPE-VARIABLEs"
+  (flet ((type-var-to-alist-cell (type-var)
+           (cons type-var (make-type-variable))))
+    (substitute-type-map type-scheme
+                         (mapcar #'type-var-to-alist-cell vars-to-replace))))
+
 (declaim (ftype (function (forall-type) type-scheme)
                 forall-type-instantiate))
 (defun forall-type-instantiate (forall-type)
-  "unwrap a FORALL-TYPE into its body, replacing its argument with a new, unbound TYPE-VARIABLE"
-  (type-scheme-substitute (forall-type-body forall-type)
-                          (forall-type-variable forall-type)
-                          (make-type-variable)))
+  "unwrap a FORALL-TYPE into its body, replacing its arguments with new, unbound TYPE-VARIABLEs"
+  (substitute-fresh-variables (forall-type-body forall-type)
+                              (forall-type-arguments forall-type)))

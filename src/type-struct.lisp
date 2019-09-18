@@ -65,9 +65,9 @@ if CONSTRUCTOR-ARGLIST is supplied, CONSTRUCTOR-ARGLIST-TYPES must be as well. t
                (format stream ,@format-args))))))))
 
 (def-type-class forall-type
-    ((variable type-variable)
+    ((arguments (trivial-types:proper-list type-variable))
      (body type-scheme))
-  ("forall ~a. ~a" variable body))
+  ("forall ~a. ~a" arguments body))
 
 (def-type-class arrow-type
     ((input type-scheme)
