@@ -26,7 +26,7 @@
                 type-scheme-generalize))
 (defun type-scheme-generalize (type-scheme type-map)
   (flet ((variable-bound-p (type-variable)
-           (type-variable-bound-p type-variable type-map)))
+           (type-map-bound-p type-map type-variable)))
     (let ((free-vars (remove-if #'variable-bound-p
                                 (type-scheme-free-variables type-scheme))))
       (if free-vars (make-forall-type free-vars type-scheme)

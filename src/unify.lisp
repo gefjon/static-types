@@ -51,6 +51,7 @@
     ((can-substitute-for-type-variable-p rhs lhs)
      (type-map-extend () rhs lhs))
 
+    ;; if both are arrows, recurse on their inputs and outputs
     ((and (typep lhs 'arrow-type)
           (typep rhs 'arrow-type))
      (unify-arrows lhs rhs))

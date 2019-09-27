@@ -1,6 +1,8 @@
 (defpackage :static-types
-  (:use :cl
-        :iterate))
+  (:use :cl :iterate :gefjon-utils)
+  (:shadowing-import-from :gefjon-utils
+   :defstruct
+   :defclass))
 (defpackage :typed
   (:export :bool
            :int

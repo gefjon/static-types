@@ -13,8 +13,8 @@
        (defvar ,variable-name (make-primitive-type ',packaged-name)))))
 
 (def-builtin-type fixnum)
-(def-builtin-type bool :repr (member t nil))
+(def-builtin-type boolean :repr boolean)
 
 (defparameter *identity*
-  (let ((var (make-type-variable))) (make-forall-type (list var) (make-arrow-type var var)))
+  (let ((var (new-type-variable))) (make-forall-type (list var) (make-arrow-type var var)))
   "the type of the identity function, forall a. a -> a")

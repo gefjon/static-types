@@ -1,19 +1,27 @@
 (in-package :static-types)
 
+(defclass var
+    ((name symbol)))
+
 (deftype type-map ()
-  "maps TYPE-VARIABLEs to TYPE-SCHEMEs"
-  '(trivial-types:association-list type-variable type-scheme))
+  "maps TYPE-VARs to TYPE-SCHEMEs"
+  '(trivial-types:association-list var type-scheme))
 
-(declaim (ftype (function (type-map type-variable type-scheme) type-map)
+(declaim (ftype (function (type-map var type-scheme) type-map)
                 type-map-extend))
-(defun type-map-extend (type-map type-variable type-scheme)
-  "extend TYPE-MAP by associating TYPE-VARIABLE with TYPE-SCHEME"
-  (acons type-variable type-scheme type-map))
+(defun type-map-extend (type-map var type-scheme)
+  "extend TYPE-MAP by associating VAR with TYPE-SCHEME"
+  (acons var type-scheme type-map))
 
-(declaim (ftype (function (type-variable type-map) boolean)
-                type-variable-bound-p))
-(defun type-variable-bound-p (type-variable type-map)
-  "T if TYPE-VARIABLE is bound in TYPE-MAP
+(declaim (ftype (function (type-map var) (or null type-scheme))
+                type-map-lookup))
+(defun type-map-lookup (type-map var)
+  (cdr (assoc var type-map :key #'var-name)))
+
+(declaim (ftype (function (type-map var) boolean)
+                type-map-bound-p))
+(defun type-map-bound-p (type-map var)
+  "T if TYPE-VAR is bound in TYPE-MAP
 
 O(n) wrt the size of TYPE-MAP"
-  (not (not (assoc type-variable type-map))))
+  (not (not (type-map-lookup type-map var))))

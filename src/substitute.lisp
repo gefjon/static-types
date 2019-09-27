@@ -1,5 +1,8 @@
 (in-package :static-types)
 
+(deftype substitution ()
+  'type-map)
+
 (defgeneric type-scheme-substitute (within search-for replace-with))
 
 (defmethod type-scheme-substitute :around ((this type-scheme) search-for replace-with)
@@ -54,12 +57,12 @@
 (do-not-substitute type-variable)
 (do-not-substitute primitive-type)
 
-(declaim (ftype (function (type-scheme type-map) type-scheme)
-                substitute-type-map))
-(defun substitute-type-map (within-this-type-scheme type-map)
-  "perform each of the substitutions in TYPE-MAP in sequence on WITHIN-THIS-TYPE-SCHEME"
+(declaim (ftype (function (type-scheme substitution) type-scheme)
+                substitute-many))
+(defun substitute-many (within-this-type-scheme substitution)
+  "perform each of the substitutions in SUBSTITUTION in sequence on WITHIN-THIS-TYPE-SCHEME"
   (iter (with type-scheme = within-this-type-scheme)
-        (for (search-for . replace-with) in type-map)
+        (for (search-for . replace-with) in substitution)
         (setf type-scheme (type-scheme-substitute type-scheme
                                                   search-for
                                                   replace-with))
@@ -71,9 +74,9 @@
 (defun substitute-fresh-variables (type-scheme vars-to-replace)
   "substitute all of the TYPE-VARIABLEs in VARS-TO-REPLACE with fresh unbound TYPE-VARIABLEs"
   (flet ((type-var-to-alist-cell (type-var)
-           (cons type-var (make-type-variable))))
-    (substitute-type-map type-scheme
-                         (mapcar #'type-var-to-alist-cell vars-to-replace))))
+           (cons type-var (new-type-variable))))
+    (substitute-many type-scheme
+                     (mapcar #'type-var-to-alist-cell vars-to-replace))))
 
 (declaim (ftype (function (forall-type) type-scheme)
                 forall-type-instantiate))
